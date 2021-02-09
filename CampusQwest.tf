@@ -126,7 +126,7 @@ EOF
 data "aws_iam_policy_document" "dynamo-access-rw" {
     statement {
         actions = [
-            "dyanmodb:DeleteItem",
+            "dynamodb:DeleteItem",
             "dynamodb:GetItem",
             "dynamodb:PutItem",
             "dynamodb:Query",
