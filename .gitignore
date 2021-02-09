@@ -24,3 +24,7 @@
 
 # Ignored vscode files
 .vscode/
+
+venv/*
+*.zip
+*.backup
