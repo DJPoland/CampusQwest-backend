@@ -25,6 +25,7 @@
 # Ignored vscode files
 .vscode/
 
+# Ignore locally generated files
 venv/*
 *.zip
 *.backup
