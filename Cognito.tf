@@ -90,6 +90,12 @@ resource "aws_cognito_user_pool" "pool" {
   }
 }
 
+resource "aws_cognito_user_pool_client" "client" {
+    name = "client"
+    user_pool_id = aws_cognito_user_pool.pool.id
+    explicit_auth_flows = [ "ALLOW_USER_PASSWORD_AUTH", "ALLOW_USER_SRP_AUTH", "ALLOW_REFRESH_TOKEN_AUTH" ]
+}
+
 resource "aws_cognito_identity_pool" "identity_pool" {
   allow_unauthenticated_identities = false
   identity_pool_name               = "campusqwest_identity"
@@ -99,7 +105,65 @@ resource "aws_cognito_identity_pool" "identity_pool" {
   tags                             = {}
 
   cognito_identity_providers {
-    client_id     = "56vsgokcpa2cfog3alqvocgusb"
-    provider_name = "cognito-idp.us-east-1.amazonaws.com/us-east-1_BaXu0YkaN"
+    client_id     = aws_cognito_user_pool_client.client.id
+    provider_name = aws_cognito_user_pool.pool.endpoint
   }
 }
+
+resource "aws_iam_role" "authenticated" {
+  name = "cognito_authenticated"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Federated": "cognito-identity.amazonaws.com"
+      },
+      "Action": "sts:AssumeRoleWithWebIdentity",
+      "Condition": {
+        "StringEquals": {
+          "cognito-identity.amazonaws.com:aud": "${aws_cognito_identity_pool.identity_pool.id}"
+        },
+        "ForAnyValue:StringLike": {
+          "cognito-identity.amazonaws.com:amr": "authenticated"
+        }
+      }
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy" "authenticated" {
+  name = "authenticated_policy"
+  role = aws_iam_role.authenticated.id
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "lambda:InvokeFunction"
+      ],
+      "Resource": [
+        "arn:aws:lambda:us-east-1:*:function:query_dynamodb_lambda"
+      ]
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_cognito_identity_pool_roles_attachment" "main" {
+  identity_pool_id = aws_cognito_identity_pool.identity_pool.id
+
+  roles = {
+    "authenticated" = aws_iam_role.authenticated.arn
+  }
+}
+
