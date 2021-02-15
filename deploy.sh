@@ -25,4 +25,4 @@ zip -r9 $SCRIPT_DIR/lambda_test.zip lambda_test.py
 
 # Run terraform apply
 cd $SCRIPT_DIR
-terraform apply
+# terraform apply
