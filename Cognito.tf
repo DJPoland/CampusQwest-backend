@@ -151,7 +151,7 @@ resource "aws_iam_role_policy" "authenticated" {
         "lambda:InvokeFunction"
       ],
       "Resource": [
-        "arn:aws:lambda:us-east-1:*:function:query_dynamodb_lambda"
+        "arn:aws:lambda:us-east-1:*:function:user_information_lambda"
       ]
     }
   ]

@@ -9,20 +9,17 @@ fi
 
 echo "Using virtualenv located in : $VIRTUAL_ENV_DIR"
 echo "Script directory: $SCRIPT_DIR"
+echo "Creating zip using python file: $1"
 
 # Create backup of zip if it exists
-if [ -f $SCRIPT_DIR/lambda_test.zip ]; then
-    mv $SCRIPT_DIR/lambda_test.zip $SCRIPT_DIR/lambda_test.zip.backup
+if [ -f $SCRIPT_DIR/$1.zip ]; then
+    mv $SCRIPT_DIR/$1.zip $SCRIPT_DIR/$1.zip.backup
 fi
 
 # Add virtualenv libs in new zip file
 cd $VIRTUAL_ENV_DIR/lib/python3.8/site-packages
-zip -r9 $SCRIPT_DIR/lambda_test.zip *
+zip -r9 $SCRIPT_DIR/$1.zip *
 cd $SCRIPT_DIR/lambdas
 
 # Add python code in zip file
-zip -r9 $SCRIPT_DIR/lambda_test.zip lambda_test.py
-
-# Run terraform apply
-cd $SCRIPT_DIR
-# terraform apply
+zip -r9 $SCRIPT_DIR/$1.zip $1.py

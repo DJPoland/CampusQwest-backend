@@ -1,5 +1,5 @@
-resource "aws_iam_role" "query_dynamodb_lambda" {
-  name               = "query_dynamodb_lambda"
+resource "aws_iam_role" "user_information_lambda" {
+  name               = "user_information_lambda"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -28,7 +28,7 @@ data "aws_iam_policy_document" "dynamo-access-rw" {
       "dynamodb:UpdateItem",
     ]
     resources = [
-      "arn:aws:dynamodb:::*",
+      "arn:aws:dynamodb:*:*:*",
     ]
   }
 }
@@ -40,21 +40,31 @@ resource "aws_iam_policy" "dynamo-access-rw" {
 }
 
 resource "aws_iam_role_policy_attachment" "dynamo-access-rw" {
-  role       = aws_iam_role.query_dynamodb_lambda.name
+  role       = aws_iam_role.user_information_lambda.name
   policy_arn = aws_iam_policy.dynamo-access-rw.arn
 }
 
 resource "aws_iam_role_policy_attachment" "basic-exec-role" {
-  role       = aws_iam_role.query_dynamodb_lambda.name
+  role       = aws_iam_role.user_information_lambda.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
-resource "aws_lambda_function" "query_dynamodb_lambda" {
-  filename         = "lambda_test.zip"
-  function_name    = "query_dynamodb_lambda"
-  role             = aws_iam_role.query_dynamodb_lambda.arn
-  handler          = "lambda_test.lambda_handler"
+resource "aws_lambda_function" "user_information_lambda" {
+  filename         = "user_information.zip"
+  function_name    = "user_information_lambda"
+  role             = aws_iam_role.user_information_lambda.arn
+  handler          = "user_information.lambda_handler"
   runtime          = "python3.8"
   timeout          = 10
-  source_code_hash = base64sha256("lambda_test.zip")
+  source_code_hash = base64sha256("user_information.zip")
+}
+
+resource "aws_lambda_function" "post_confirmation_lambda" {
+  filename = "post_confirmation.zip"
+  function_name = "post_confirmation_lambda"
+  role = aws_iam_role.user_information_lambda.arn
+  handler = "post_confirmation.lambda_handler"
+  runtime = "python3.8"
+  timeout = 10
+  source_code_hash = base64sha256("post_confirmation.zip")
 }
