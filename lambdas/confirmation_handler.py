@@ -4,7 +4,7 @@ from botocore.exceptions import ClientError
 from marshmallow_dataclass import dataclass as marshmallow_dataclass
 
 client = boto3.client('dynamodb')
-serializer = TypeSerializer()
+serializer = TypeSerializer().serialize
 
 @marshmallow_dataclass
 class User:
@@ -22,7 +22,7 @@ def put_item(table_name, item):
     try:
         response = client.put_item(
             TableName=table_name,
-            Item={ k: serializer.serialize(v) for k, v in User.Schema().dump(item).items() }
+            Item={ k: serializer(v) for k, v in User.Schema().dump(item).items() }
         )
     except ClientError as err:
         raise err

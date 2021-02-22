@@ -22,4 +22,5 @@ zip -r9 $SCRIPT_DIR/$1.zip *
 cd $SCRIPT_DIR/lambdas
 
 # Add python code in zip file
+zip -r9 $SCRIPT_DIR/$1.zip utils
 zip -r9 $SCRIPT_DIR/$1.zip $1.py

@@ -30,3 +30,4 @@ venv/*
 *.zip
 *.backup
 local_venv/
+test/*
