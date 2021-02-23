@@ -72,6 +72,19 @@ resource "aws_cognito_user_pool" "pool" {
     }
   }
 
+  schema {
+    attribute_data_type = "String"
+    developer_only_attribute = false
+    mutable = true
+    name = "campus"
+    required = false
+
+    string_attribute_constraints {
+      max_length = "2048"
+      min_length = "0"
+    }
+  }
+
   software_token_mfa_configuration {
     enabled = true
   }
@@ -88,12 +101,21 @@ resource "aws_cognito_user_pool" "pool" {
     email_subject_by_link = "Welcome to CampusQwest!"
     sms_message           = "Your verification code is {####}. "
   }
+
+  lambda_config {
+    post_confirmation = aws_lambda_function.confirmation_handler_lambda.arn
+  }
 }
 
 resource "aws_cognito_user_pool_client" "client" {
     name = "client"
     user_pool_id = aws_cognito_user_pool.pool.id
     explicit_auth_flows = [ "ALLOW_USER_PASSWORD_AUTH", "ALLOW_USER_SRP_AUTH", "ALLOW_REFRESH_TOKEN_AUTH" ]
+}
+
+resource "aws_cognito_user_pool_domain" "pool_domain" {
+    domain                      = "campusqwest"
+    user_pool_id                = aws_cognito_user_pool.pool.id
 }
 
 resource "aws_cognito_identity_pool" "identity_pool" {
