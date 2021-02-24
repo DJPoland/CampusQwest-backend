@@ -1,6 +1,6 @@
 import boto3
 from botocore.exceptions import ClientError
-from boto3.dynamodb.types import TypeDeserializer
+from boto3.dynamodb.types import TypeDeserializer, TypeSerializer
 
 client = boto3.client('dynamodb')
 deserializer = TypeDeserializer().deserialize
@@ -59,4 +59,4 @@ def update_attribute_list_of_item(table_name, key_value, appended_obj={}, key_at
     except ClientError as err:
         raise err
     else:
-        print(get_result)
+        print("Updated item: ", get_result)

@@ -27,6 +27,7 @@
 
 # Ignore locally generated files
 venv/*
+lambdas/venv/*
 *.zip
 *.backup
 local_venv/

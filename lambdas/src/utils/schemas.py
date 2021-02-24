@@ -1,5 +1,6 @@
-@marshmallow_dataclass
-class User:
+from typing import TypedDict
+
+class User(TypedDict):
     id: str
     avatar: str
     badges: list
@@ -10,8 +11,7 @@ class User:
     trophies: list
     qwestLines: list
 
-@marshmallow_dataclass
-class CurrentQwest:
-    locationIndex: str
-    qwestId: str
-    timeStarted: str
+class CurrentQwest(TypedDict):
+    locationIndex = str
+    qwestId = str
+    timeStarted = str

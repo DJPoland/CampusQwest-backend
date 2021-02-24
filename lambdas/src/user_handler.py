@@ -13,6 +13,7 @@ def user_endpoint(subId):
     return json.dumps(user_data, default=decimal_default)
 
 def update_profile_endpoint():
+    pass
 
 
 def lambda_handler(event, context):

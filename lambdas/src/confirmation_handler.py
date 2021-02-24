@@ -1,28 +1,16 @@
 import boto3
 from boto3.dynamodb.types import TypeSerializer
 from botocore.exceptions import ClientError
-from marshmallow_dataclass import dataclass as marshmallow_dataclass
+from utils.schemas import User
 
 client = boto3.client('dynamodb')
 serializer = TypeSerializer().serialize
-
-@marshmallow_dataclass
-class User:
-    id: str
-    avatar: str
-    badges: list
-    banner: str
-    campus: str
-    exp: int
-    username: str
-    trophies: list
-    qwestLines: list
 
 def put_item(table_name, item):
     try:
         response = client.put_item(
             TableName=table_name,
-            Item={ k: serializer(v) for k, v in User.Schema().dump(item).items() }
+            Item={ k: serializer(v) for k, v in item.items() }
         )
     except ClientError as err:
         raise err
@@ -35,20 +23,21 @@ def lambda_handler(event, context):
     if not event:
         raise Exception("Invalid event request")
 
-    subId = event['request']['userAttributes']['sub'] 
+    subId = event.request.userAttributes.sub
     user_name = event['userName']
     # TODO: frontend needs to verify campus
     create_user = User(
-        subId,
-        "default",
-        ["default"],
-        "default",
-        "",
-        0,
-        user_name,
-        [],
-        [],
+        id=subId,
+        avatar="default",
+        badges=["default"],
+        banner="default",
+        campus="",
+        exp=0,
+        username=user_name,
+        trophies=[],
+        qwestLines=[],
     )
+    print("testing")
     put_item('Users', create_user)
     print(create_user)
 

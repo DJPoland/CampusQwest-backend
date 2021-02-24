@@ -40,6 +40,27 @@ resource "aws_apigatewayv2_integration" "users_lambda" {
     integration_uri        = aws_lambda_function.user_handler_lambda.invoke_arn
     payload_format_version = "2.0"
 }
+resource "aws_lambda_permission" "leaderboard_permission" {
+  statement_id  = "AllowAPIGatewayInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.leaderboard_handler_lambda.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn = "${aws_apigatewayv2_api.example.execution_arn}/*"
+}
+resource "aws_lambda_permission" "qwest_permission" {
+  statement_id  = "AllowAPIGatewayInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.qwest_handler_lambda.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn = "${aws_apigatewayv2_api.example.execution_arn}/*"
+}
+resource "aws_lambda_permission" "user_permission" {
+  statement_id  = "AllowAPIGatewayInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.user_handler_lambda.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn = "${aws_apigatewayv2_api.example.execution_arn}/*"
+}
 
 # All routes for the API Gateway
 resource "aws_apigatewayv2_route" "leaderboard_route" {
@@ -86,4 +107,9 @@ resource "aws_apigatewayv2_route" "update_profile_route" {
     route_key            = "POST /user/updateProfile"
     authorization_type   = "JWT"
     authorizer_id        = aws_apigatewayv2_authorizer.cognito_pool_authorizer.id
+}
+
+resource "aws_apigatewayv2_stage" "default" {
+    api_id               = aws_apigatewayv2_api.example.id
+    name = "$default"
 }
