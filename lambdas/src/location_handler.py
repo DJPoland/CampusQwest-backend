@@ -17,3 +17,4 @@ def lambda_handler(event, context):
             'body': 'qwestComplete: false, nextLocation: 2, locationObject: (location object from database)'
         }
     elif path == '/user/location/updateThermometer' and method == 'POST':
+        pass

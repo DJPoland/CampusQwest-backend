@@ -155,9 +155,15 @@ event_json_start_qwest = {
         "time": "24/Feb/2021:00:39:41 +0000",
         "timeEpoch": 1614127181179
     },
-    "body": "{\r\n  \"id\": 4\r\n}",
+    "body": "{\r\n  \"id\": 7\r\n}",
     "isBase64Encoded": False
 }
 
 event_json_confirmation = {'version': '1', 'region': 'us-east-1', 'userPoolId': 'us-east-1_qRJ2N0GOu', 'userName': 'creationtest', 'callerContext': {'awsSdkVersion': 'aws-sdk-unknown-unknown', 'clientId': '5dujj59nunfh7qkb9lce7jl8os'}, 'triggerSource': 'PostConfirmation_ConfirmSignUp',
                            'request': {'userAttributes': {'sub': 'f48c-42e9-8642-ff50b3077780', 'cognito:user_status': 'CONFIRMED', 'email_verified': 'true', 'cognito:email_alias': 'djpoland@knights.ucf.edu', 'email': 'djpoland@knights.ucf.edu'}}, 'response': {}}
+
+# TODO: Finish and test updateProfile
+
+# TODO: Finish and test nextLocation
+
+# TODO: Finish and test updateThermometer

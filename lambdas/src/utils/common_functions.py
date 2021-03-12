@@ -3,11 +3,12 @@ from boto3.dynamodb.types import TypeSerializer
 serializer = TypeSerializer().serialize
 
 def obtainDataFromEvent(event, getSubId=False):
-    requestContext = event.requestContext
+    requestContext = event["requestContext"]
 
     subId = None
     if getSubId:
-        subId = requestContext.authorizer.jwt.claims.sub
+        subId = requestContext["authorizer"]["jwt"]["claims"]["sub"]
 
-    method, path = requestContext.http
+    httpObject = requestContext["http"]
+    method, path = httpObject["method"], httpObject["path"]
     return method, path, subId

@@ -32,3 +32,6 @@ lambdas/venv/*
 *.backup
 local_venv/
 test/*
+
+generateToken.sh
+auth.json

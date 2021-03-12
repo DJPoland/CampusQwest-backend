@@ -45,12 +45,14 @@ def get_all_items(table_name):
 
 def update_attribute_list_of_item(table_name, key_value, appended_obj={}, key_attr='id'):
     try:
+        appended_obj = serializer(appended_obj)
+        print("This is object", appended_obj)
         get_result = client.update_item(
             TableName=table_name,
             Key={
                 key_attr: {"S": key_value}
             },
-            UpdateExpression="SET currentQwest = list_append(if_not_exists(currentQwest, :empty_list), :my_value",
+            UpdateExpression="SET currentQwest = list_append(if_not_exists(currentQwest, :empty_list), :my_value)",
             ExpressionAttributeValues={
                 ":my_value": {"L": [appended_obj]},
                 ":empty_list": {"L": []}

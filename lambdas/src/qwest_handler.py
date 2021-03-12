@@ -5,7 +5,7 @@ import decimal
 from datetime import datetime
 from utils.common_functions import obtainDataFromEvent
 from utils.dynamodb_functions import get_all_items, get_item, update_attribute_list_of_item
-from datamodels.common_datamodels import CurrentQwest
+from utils.schemas import CurrentQwest
 
 
 def filter_qwests(qwests, campus, qwestsCompleted):
@@ -28,9 +28,9 @@ def get_qwests_for_user(subId):
     return qwestsForUser
 
 def begin_qwest_for_user(subId, qwestId):
-    currentQwest = CurrentQwest("0", qwestId, datetime.utcnow().isoformat())
+    currentQwest = CurrentQwest(locationIndex="4", qwestId=qwestId, timeStarted=datetime.utcnow().isoformat())
     print("appended object: ", currentQwest)
-    # update_attribute_list_of_item('Users', subId, append_obj)
+    update_attribute_list_of_item('Users', subId, currentQwest)
 
 
 def lambda_handler(event, context):

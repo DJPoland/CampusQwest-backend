@@ -10,7 +10,7 @@ def decimal_default(obj):
 
 def user_endpoint(subId):
     user_item = get_item('Users', subId)
-    return json.dumps(user_data, default=decimal_default)
+    return json.dumps(user_item, default=decimal_default)
 
 def update_profile_endpoint():
     pass

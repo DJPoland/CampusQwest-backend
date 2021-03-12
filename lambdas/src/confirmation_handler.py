@@ -23,21 +23,23 @@ def lambda_handler(event, context):
     if not event:
         raise Exception("Invalid event request")
 
-    subId = event.request.userAttributes.sub
+    sub_id = event["request"]["userAttributes"]["sub"]
+    campus_id = event["request"]["userAttributes"]["custom:campus"]
     user_name = event['userName']
+
     # TODO: frontend needs to verify campus
     create_user = User(
-        id=subId,
+        id=sub_id,
         avatar="default",
         badges=["default"],
         banner="default",
-        campus="",
+        campus=campus_id,
         exp=0,
         username=user_name,
         trophies=[],
         qwestLines=[],
     )
-    print("testing")
+
     put_item('Users', create_user)
     print(create_user)
 
