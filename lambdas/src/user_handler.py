@@ -1,12 +1,8 @@
 import boto3
 import json
-import decimal
-from utils.common_functions import obtainDataFromEvent
+from utils.common_functions import obtainDataFromEvent, decimal_default
 from utils.dynamodb_functions import get_item
 
-def decimal_default(obj):
-    if isinstance(obj, decimal.Decimal):
-        return int(obj)
 
 def user_endpoint(subId):
     user_item = get_item('Users', subId)
