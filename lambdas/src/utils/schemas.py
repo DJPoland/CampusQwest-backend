@@ -2,16 +2,19 @@ from typing import TypedDict
 
 class User(TypedDict):
     id: str
-    avatar: str
-    badges: list
-    banner: str
     campus: str
     exp: int
-    username: str
+    rank: str
+    selectedAvatar: int 
+    selectedBanner: int
     trophies: list
-    qwestLines: list
+    medals: list
+    username: str
+    currentQwests: list
+    qwestsCompleted: list
+
 
 class CurrentQwest(TypedDict):
-    locationIndex = str
     qwestId = str
+    locationIndex = str
     timeStarted = str

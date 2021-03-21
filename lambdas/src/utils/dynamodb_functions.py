@@ -7,7 +7,7 @@ deserializer = TypeDeserializer().deserialize
 serializer = TypeSerializer().serialize
 
 
-def get_item(table_name, key_value, key_attr='id'):
+def get_item(table_name: str, key_value: str, key_attr: str = 'id') -> dict:
     try:
         get_result = client.get_item(
             TableName=table_name,
@@ -23,8 +23,18 @@ def get_item(table_name, key_value, key_attr='id'):
 
         return deserialised
 
+def put_item(table_name: str, item: dict) -> None:
+    try:
+        response = client.put_item(
+            TableName=table_name,
+            Item={ k: serializer(v) for k, v in item.items() }
+        )
+    except ClientError as err:
+        raise err
+    else:
+        print("Successfully put item: ", response)
 
-def get_all_items(table_name):
+def get_all_items(table_name: str) -> list:
     try:
         get_result = client.scan(
             TableName=table_name,
@@ -43,7 +53,7 @@ def get_all_items(table_name):
 
         return itemsDeserialized
 
-def update_attribute_list_of_item(table_name, key_value, appended_obj={}, key_attr='id'):
+def update_attribute_list_of_item(table_name: str, key_value: str, appended_obj: dict = {}, key_attr: str = 'id') -> None:
     try:
         appended_obj = serializer(appended_obj)
         print("This is object", appended_obj)
@@ -52,7 +62,7 @@ def update_attribute_list_of_item(table_name, key_value, appended_obj={}, key_at
             Key={
                 key_attr: {"S": key_value}
             },
-            UpdateExpression="SET currentQwest = list_append(if_not_exists(currentQwest, :empty_list), :my_value)",
+            UpdateExpression="SET currentQwests = list_append(if_not_exists(currentQwests, :empty_list), :my_value)",
             ExpressionAttributeValues={
                 ":my_value": {"L": [appended_obj]},
                 ":empty_list": {"L": []}

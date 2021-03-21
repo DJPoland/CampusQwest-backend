@@ -8,7 +8,7 @@ from utils.dynamodb_functions import get_all_items, get_item, update_attribute_l
 from utils.schemas import CurrentQwest
 
 
-def filter_qwests(qwests, campus, qwestsCompleted):
+def filter_qwests(qwests: list, campus: str, qwestsCompleted: set) -> list:
     filteredQwests = []
     for qwest in qwests:
         if qwest['campus'] == campus and qwest['id'] not in qwestsCompleted:
@@ -16,19 +16,18 @@ def filter_qwests(qwests, campus, qwestsCompleted):
 
     return filteredQwests
 
-def get_qwests_for_user(subId):
+def get_qwests_for_user(subId: str) -> list:
     allQwests = get_all_items('Qwests')
     userItem = get_item('Users', subId)
     qwestsCompleted = set()
     if 'qwestsCompleted' in userItem:
         qwestsCompleted = {qwest['qwestId']
                            for qwest in userItem['qwestsCompleted']}
-    qwestsForUser = filter_qwests(allQwests, "UCF", qwestsCompleted)
 
-    return qwestsForUser
+    return filter_qwests(allQwests, "UCF", qwestsCompleted)
 
-def begin_qwest_for_user(subId, qwestId):
-    currentQwest = CurrentQwest(locationIndex="4", qwestId=qwestId, timeStarted=datetime.utcnow().isoformat())
+def begin_qwest_for_user(subId: str, qwestId: str) -> None:
+    currentQwest = CurrentQwest(qwestId=qwestId, locationIndex="0", timeStarted=datetime.utcnow().isoformat())
     print("appended object: ", currentQwest)
     update_attribute_list_of_item('Users', subId, currentQwest)
 

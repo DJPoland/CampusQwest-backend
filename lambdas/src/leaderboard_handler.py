@@ -7,9 +7,10 @@ def leaderboard_data():
     campus_data = get_item('CampusData', 'UCF', 'campus')
     if not campus_data:
         raise Exception("The Campus UCF does not have data for leaderboards")
-
-    return campus_data['qwestsOnCampus']
-    print(data)
+    elif 'qwestsOnCampus' not in campus_data:
+        raise Exception("Database for leaderboard does not have qwestsOnCampus key")
+    else:
+        return campus_data['qwestsOnCampus']
 
 def lambda_handler(event, context):
     print(event)

@@ -10,8 +10,7 @@ def lambda_handler(event, context):
         }
 
     if path == '/user/location/nextLocation' and method == 'POST':
-        # check qwestId for next location (or increment), then update locationId for user.
-        # no need for qwest complete since this endpoint will return a boolean indicating complete or not.
+        # Simply need qwestId and locationIndex
         return {
             'statusCode': 200,
             'body': 'qwestComplete: false, nextLocation: 2, locationObject: (location object from database)'
