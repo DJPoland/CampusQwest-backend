@@ -41,7 +41,7 @@
     <li>
       <a href="#about-the-project">About The Project</a>
       <ul>
-        <li><a href="#built-with">Built With</a></li>
+        <li><a href="#configured-with">Configured With</a></li>
       </ul>
     </li>
     <li>
@@ -62,12 +62,13 @@
 ## About The Project
 
 TODO: May expand on this section of the README...
-### Built With
+### Configured With:
 
-The backend for the team's Senior Design project used:
+The tools needed for CampusQwest includes:
 * [Terraform](https://terraform.io)
-* [AWS](https://aws.amazon.com)
+* [AWS CLI](https://aws.amazon.com)
 * [Python 3](https://python.org)
+* An operating system that supports shell scripts (UNIX/*NIX environments)
 
 
 
@@ -77,21 +78,21 @@ The backend for the team's Senior Design project used:
 To setup the backend, the steps below will help in accomplishing this task. This assumes the AWS CLI has been configured properly and that terraform  and Python 3.8 are installed.
 
 ### Setup 
-
-1. Clone the repo and change into the directory
-2. Set up a virtual environment in Python
+1. Ensure you have configured the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html) with your AWS account and have the [Terraform CLI](https://www.terraform.io/downloads.html).
+2. Clone the repo and change into the directory ```~/CampusQwest-backend/lambdas ```
+3. Set up a virtual environment in Python (Note: Make sure the environment is Python 3.8.*, not 3.9+ due to AWS Lambda runtime support).
    ```sh
    python -m venv venv
    source ./venv/bin/activate
    ```
-3. Install the Python dependencies
+4. Install the Python dependencies
    ```sh
    pip install -r requirements.txt
    ```
-4. Then use the shell script for deployment
+5. Then use the shell script for generating deployable Lambda functions
    ```JS
-   chmod +x deploy.sh
-   ./deploy.sh
+   chmod +x create_lambdas.sh
+   ./create_lambdas.sh
    ```
 
 
