@@ -94,6 +94,7 @@ To setup the backend, the steps below will help in accomplishing this task. This
    chmod +x create_lambdas.sh
    ./create_lambdas.sh
    ```
+6. Now simply head back to the root of the directory and manage the infrastructure with the Terraform CLI.
 
 
 <!-- USAGE EXAMPLES -->
