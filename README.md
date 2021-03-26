@@ -39,10 +39,7 @@
   <summary>Table of Contents</summary>
   <ol>
     <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#configured-with">Configured With</a></li>
-      </ul>
+      <a href="#required-software">Required Software</a>
     </li>
     <li>
       <a href="#getting-started">Getting Started</a>
@@ -57,12 +54,7 @@
 </details>
 
 
-
-<!-- ABOUT THE PROJECT -->
-## About The Project
-
-TODO: May expand on this section of the README...
-### Configured With:
+## Required Software:
 
 The tools needed for CampusQwest includes:
 * [Terraform](https://terraform.io)
@@ -94,7 +86,7 @@ To setup the backend, the steps below will help in accomplishing this task. This
    chmod +x create_lambdas.sh
    ./create_lambdas.sh
    ```
-6. Now simply head back to the root of the directory and manage the infrastructure with the Terraform CLI.
+6. Now head back to the root directory and deploy using the Terraform CLI.
 
 
 <!-- USAGE EXAMPLES -->
