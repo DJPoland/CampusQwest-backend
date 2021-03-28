@@ -10,11 +10,12 @@ class User(TypedDict):
     trophies: list
     medals: list
     username: str
-    currentQwests: list
+    currentQwest: dict
     qwestsCompleted: list
 
 
 class CurrentQwest(TypedDict):
     qwestId = str
-    locationIndex = str
+    locationIndex = int
     timeStarted = str
+    numOfLocations = int

@@ -24,7 +24,7 @@ def lambda_handler(event, context):
         trophies=[0 for _ in range(8)],
         medals=[0 for _ in range(10)],
         username=user_name,
-        currentQwests=[],
+        currentQwest={},
         qwestsCompleted=[]
     )
 
