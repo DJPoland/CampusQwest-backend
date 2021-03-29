@@ -40,6 +40,13 @@ resource "aws_apigatewayv2_integration" "users_lambda" {
     integration_uri        = aws_lambda_function.user_handler_lambda.invoke_arn
     payload_format_version = "2.0"
 }
+resource "aws_apigatewayv2_integration" "location_lambda" {
+    api_id                 = aws_apigatewayv2_api.example.id
+    integration_method     = "POST"
+    integration_type       = "AWS_PROXY"
+    integration_uri        = aws_lambda_function.location_handler_lambda.invoke_arn
+    payload_format_version = "2.0"
+}
 resource "aws_lambda_permission" "leaderboard_permission" {
   statement_id  = "AllowAPIGatewayInvoke"
   action        = "lambda:InvokeFunction"
@@ -58,6 +65,13 @@ resource "aws_lambda_permission" "user_permission" {
   statement_id  = "AllowAPIGatewayInvoke"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.user_handler_lambda.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn = "${aws_apigatewayv2_api.example.execution_arn}/*"
+}
+resource "aws_lambda_permission" "location_permission" {
+  statement_id  = "AllowAPIGatewayInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.location_handler_lambda.function_name
   principal     = "apigateway.amazonaws.com"
   source_arn = "${aws_apigatewayv2_api.example.execution_arn}/*"
 }
@@ -95,12 +109,7 @@ resource "aws_apigatewayv2_route" "next_location_route" {
     route_key            = "POST /user/location/nextLocation"
     authorization_type   = "JWT"
     authorizer_id        = aws_apigatewayv2_authorizer.cognito_pool_authorizer.id
-}
-resource "aws_apigatewayv2_route" "update_thermometer_route" {
-    api_id               = aws_apigatewayv2_api.example.id
-    route_key            = "POST /user/location/updateThermometer"
-    authorization_type   = "JWT"
-    authorizer_id        = aws_apigatewayv2_authorizer.cognito_pool_authorizer.id
+    target               = "integrations/${aws_apigatewayv2_integration.location_lambda.id}"
 }
 resource "aws_apigatewayv2_route" "update_profile_route" {
     api_id               = aws_apigatewayv2_api.example.id

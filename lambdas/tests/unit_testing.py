@@ -17,6 +17,6 @@ from src.leaderboard_handler import lambda_handler as leaderboard_handler
 #         q_handler(event_json, None)
 
 if __name__ == "__main__":
-    result = qwest_handler(event_json_start_qwest, None)
-    print(result)
+    result = location_handler(event_json_location, None)
+    print("result is:", result)
     # unittest.main(verbosity=2)

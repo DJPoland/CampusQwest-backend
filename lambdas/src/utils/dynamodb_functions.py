@@ -97,6 +97,22 @@ def start_current_qwest_for_user(sub_id: str, currentQwest: dict) -> None:
     else:
         print("Qwest successfully started")
 
+# Removes the k/v pairs in the map if they exist, otherwise nothing happens.
+def remove_current_qwest_for_user(sub_id: str) -> None:
+    try:
+        get_result = client.update_item(
+            TableName="Users",
+            Key={
+                'id': {"S": sub_id}
+            },
+            UpdateExpression="REMOVE currentQwest.locationIndex, currentQwest.numOfLocations, currentQwest.qwestId, currentQwest.timeStarted",
+            ReturnValues="ALL_NEW"
+        )
+    except ClientError as err:
+        raise err
+    else:
+        print("Current Qwest removal completed")
+
 
 def update_attribute_list_of_item(table_name: str, key_value: str, appended_obj: dict = {}, key_attr: str = 'id') -> None:
     try:

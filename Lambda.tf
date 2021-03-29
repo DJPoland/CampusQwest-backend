@@ -77,7 +77,7 @@ resource "aws_lambda_function" "location_handler_lambda" {
   filename         = "${path.module}/lambdas/output/location_handler.zip"
   function_name    = "location_handler_lambda"
   role             = aws_iam_role.assume_role_lambda.arn
-  handler          = "qwest_information.lambda_handler"
+  handler          = "location_handler.lambda_handler"
   runtime          = "python3.8"
   timeout          = 10
   source_code_hash = filebase64sha256("${path.module}/lambdas/output/location_handler.zip")
