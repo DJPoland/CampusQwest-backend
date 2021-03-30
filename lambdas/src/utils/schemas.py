@@ -17,5 +17,4 @@ class User(TypedDict):
 class CurrentQwest(TypedDict):
     qwestId = str
     locationIndex = int
-    timeStarted = str
     numOfLocations = int

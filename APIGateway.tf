@@ -79,7 +79,7 @@ resource "aws_lambda_permission" "location_permission" {
 # All routes for the API Gateway
 resource "aws_apigatewayv2_route" "leaderboard_route" {
     api_id               = aws_apigatewayv2_api.example.id
-    route_key            = "GET /leaderboard"
+    route_key            = "POST /leaderboard"
     authorization_type   = "NONE"
     target               = "integrations/${aws_apigatewayv2_integration.leaderboard_lambda.id}"
 }

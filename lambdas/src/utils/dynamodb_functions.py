@@ -73,9 +73,25 @@ def increment_location_index_for_user(sub_id: str) -> None:
     else:
         print("Successfully incremented locationIndex for user")
 
+def set_timestamp_for_qwest(sub_id: str, startTime: str) -> None:
+    try:
+        get_result = client.update_item(
+            TableName="Users",
+            Key={
+                'id': {"S": sub_id}
+            },
+            ConditionExpression="attribute_not_exists(currentQwest.timeStarted)",
+            UpdateExpression="SET currentQwest.timeStarted = :time",
+            ExpressionAttributeValues={
+                ":time": {'S': startTime}
+            }
+        )
+    except ClientError as err:
+        raise err
+    else:
+        print("Timestamp successful")
+
 # Ensures there is no currentQwest for user. If there is an error is thrown.
-
-
 def start_current_qwest_for_user(sub_id: str, currentQwest: dict) -> None:
     try:
         get_result = client.update_item(
@@ -84,12 +100,11 @@ def start_current_qwest_for_user(sub_id: str, currentQwest: dict) -> None:
                 'id': {"S": sub_id}
             },
             ConditionExpression="attribute_not_exists(currentQwest.locationIndex)",
-            UpdateExpression="SET currentQwest.locationIndex = :loc, currentQwest.numOfLocations = :numl, currentQwest.qwestId = :qid, currentQwest.timeStarted = :time",
+            UpdateExpression="SET currentQwest.locationIndex = :loc, currentQwest.numOfLocations = :numl, currentQwest.qwestId = :qid",
             ExpressionAttributeValues={
                 ":loc": {'N': currentQwest['locationIndex']}, 
                 ":numl": {'N': currentQwest['numOfLocations']},
                 ":qid": {'S': currentQwest['qwestId']},
-                ":time": {'S': currentQwest['timeStarted']}
             }
         )
     except ClientError as err:
@@ -112,6 +127,32 @@ def remove_current_qwest_for_user(sub_id: str) -> None:
         raise err
     else:
         print("Current Qwest removal completed")
+
+def get_leaderboard_by_qwest(qwest_id: str) -> list:
+    try:
+        get_result = client.query(
+            TableName="all_recorded_times",
+            KeyConditionExpression="qwestId = :value",
+            Limit=10,
+            ScanIndexForward=True,
+            ExpressionAttributeValues={
+                ":value": {'S': qwest_id},
+            }
+        )
+    except ClientError as err:
+        raise err
+    else:
+        itemsDeserialized = []
+        for item in get_result.get('Items'):
+            deserialized = {}
+            for k, v in item.items():
+                deserialized[k] = deserializer(v)
+
+            itemsDeserialized.append(deserialized)
+
+        print("Successfully fetched qwest id")
+        return itemsDeserialized
+
 
 
 def update_attribute_list_of_item(table_name: str, key_value: str, appended_obj: dict = {}, key_attr: str = 'id') -> None:

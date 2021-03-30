@@ -2,7 +2,7 @@ import json
 
 from datetime import datetime
 from utils.common_functions import obtainDataFromEvent
-from utils.dynamodb_functions import get_item, increment_location_index_for_user, remove_current_qwest_for_user, update_attribute_list_of_item, put_item
+from utils.dynamodb_functions import get_item, increment_location_index_for_user, remove_current_qwest_for_user, update_attribute_list_of_item, put_item, set_timestamp_for_qwest
 
 def finish_qwest(subId: str, timeStarted: str, qwestId: str, userItem: dict) -> None:
     # Get total time based on available UTC data
@@ -25,10 +25,15 @@ def finish_qwest(subId: str, timeStarted: str, qwestId: str, userItem: dict) -> 
 def response_logic(currentQwest: dict, subId: str, userItem: dict) -> dict:
     nextLocation = int(currentQwest['locationIndex']) + 1
     numOfLocations = int(currentQwest['numOfLocations'])
-    timeStarted = currentQwest['timeStarted']
+    timeStarted = currentQwest['timeStarted'] if nextLocation > 1 else None
     qwestId = currentQwest['qwestId']
 
+
     if nextLocation < numOfLocations:
+
+        if nextLocation == 1:
+            set_timestamp_for_qwest(sub_id=subId, startTime=datetime.utcnow().isoformat())
+
         increment_location_index_for_user(subId)
         return {
             'statusCode': 200,

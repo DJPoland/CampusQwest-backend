@@ -1,9 +1,8 @@
 import boto3
 import json
-import decimal
 
 from datetime import datetime
-from utils.common_functions import obtainDataFromEvent
+from utils.common_functions import obtainDataFromEvent, decimal_default
 from utils.dynamodb_functions import get_all_items, get_item, start_current_qwest_for_user
 from utils.schemas import CurrentQwest
 
@@ -31,12 +30,13 @@ def get_qwests_for_user(subId: str) -> list:
 def begin_qwest_for_user(subId: str, qwestId: str) -> None:
     qwestItem = get_item('Qwests', qwestId)
     print("qwestItem is:", qwestItem)
+
     totalLocations = str(qwestItem['numOfLocations'])
     print("total locations is:", totalLocations)
 
-    currentQwest = CurrentQwest(qwestId=qwestId, locationIndex="0", timeStarted=datetime.utcnow(
-    ).isoformat(), numOfLocations=totalLocations)
+    currentQwest = CurrentQwest(qwestId=qwestId, locationIndex="0", numOfLocations=totalLocations)
     print("appended object: ", currentQwest)
+
     start_current_qwest_for_user(subId, currentQwest)
 
 
@@ -47,9 +47,10 @@ def lambda_handler(event, context):
 
     if path == '/user/qwests/fetchQwests' and method == 'GET':
         qwests = get_qwests_for_user(subId)
+
         return {
             'statusCode': 200,
-            'body': json.dumps(qwests)
+            'body': json.dumps(qwests, default=decimal_default)
         }
     elif path == '/user/qwests/startQwest' and method == 'POST':
         qwestId = json.loads(event['body'])
