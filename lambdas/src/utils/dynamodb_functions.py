@@ -174,3 +174,40 @@ def update_attribute_list_of_item(table_name: str, key_value: str, appended_obj:
         raise err
     else:
         print("Updated item: ", get_result)
+
+def update_profile_selected_avatar(sub_id: str, selected_avatar: str) -> None:
+    try:
+        get_result = client.update_item(
+            TableName="Users",
+            Key={
+                'id': {"S": sub_id}
+            },
+            ConditionExpression="attribute_exists(selectedAvatar)",
+            UpdateExpression="SET selectedAvatar = :ava",
+            ExpressionAttributeValues={
+                ":ava": {'N': selected_avatar},
+            }
+        )
+    except ClientError as err:
+        raise err
+    else:
+        print("Update profile successful")
+
+
+def update_profile_selected_banner(sub_id: str, selected_banner: str) -> None:
+    try:
+        get_result = client.update_item(
+            TableName="Users",
+            Key={
+                'id': {"S": sub_id}
+            },
+            ConditionExpression="attribute_exists(selectedBanner)",
+            UpdateExpression="SET selectedBanner = :ban",
+            ExpressionAttributeValues={
+                ':ban': {"N": selected_banner},
+            }
+        )
+    except ClientError as err:
+        raise err
+    else:
+        print("Update profile successful")

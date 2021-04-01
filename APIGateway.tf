@@ -116,6 +116,7 @@ resource "aws_apigatewayv2_route" "update_profile_route" {
     route_key            = "POST /user/updateProfile"
     authorization_type   = "JWT"
     authorizer_id        = aws_apigatewayv2_authorizer.cognito_pool_authorizer.id
+    target               = "integrations/${aws_apigatewayv2_integration.users_lambda.id}"
 }
 
 resource "aws_apigatewayv2_stage" "default" {

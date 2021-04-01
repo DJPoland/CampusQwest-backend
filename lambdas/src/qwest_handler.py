@@ -2,6 +2,7 @@ import boto3
 import json
 
 from datetime import datetime
+from urllib.parse import unquote
 from utils.common_functions import obtainDataFromEvent, decimal_default
 from utils.dynamodb_functions import get_all_items, get_item, start_current_qwest_for_user
 from utils.schemas import CurrentQwest
@@ -53,7 +54,8 @@ def lambda_handler(event, context):
             'body': json.dumps(qwests, default=decimal_default)
         }
     elif path == '/user/qwests/startQwest' and method == 'POST':
-        qwestId = json.loads(event['body'])
+        jsonBody = unquote(event['body'])
+        qwestId = json.loads(jsonBody)
         idString = str(qwestId['id'])
         print("subId is:", subId, " and id string is:", idString)
         try:
@@ -71,6 +73,7 @@ def lambda_handler(event, context):
                 'statusCode': 201
             }
     else:
+
         return {
             'statusCode': 400
         }
